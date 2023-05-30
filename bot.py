@@ -35,13 +35,10 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    # Store every incoming message to the database
-
-    messages_collection.insert_one({"content": message.content, "channel_id": message.channel.id, "author_id": message.author.id})
-
     config = config_collection.find_one({"guild_id": message.guild.id})
     # Check if the message is from a channel the bot should learn from
     if config and "channels" in config and message.channel.id in config["channels"]:
+        messages_collection.insert_one({"content": message.content, "channel_id": message.channel.id, "author_id": message.author.id})
         model = await build_model(message.channel.id, message.author.id)
         if model:
             reply = model.make_short_sentence(280)
