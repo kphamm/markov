@@ -36,7 +36,6 @@ async def on_message(message):
         return
 
     # Store every incoming message to the database
-    messages_collection.delete_many({})
 
     messages_collection.insert_one({"content": message.content, "channel_id": message.channel.id, "author_id": message.author.id})
 
